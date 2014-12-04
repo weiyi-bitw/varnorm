@@ -1,7 +1,7 @@
 variant normalization toolkit
 =============
 
-By Wei-Yi Cheng, Chen Lab 2014
+Normalize variants in VCF file using left-aligned normalization. Basically a wrapper around Counsyl's hgvs package.
 
 Prerequiesite
 -------------
@@ -9,7 +9,7 @@ Prerequiesite
 Setup $HG19 environment variable.
 
 python packages:
-- hgvs from [counsyl](https://github.com/counsyl/hgvs)
+- hgvs from [Counsyl](https://github.com/counsyl/hgvs)
 - pygr
 
 normVCF
