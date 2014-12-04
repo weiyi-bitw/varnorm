@@ -1,0 +1,6 @@
+nohup.out
+MANIFEST
+env/
+dist/
+build/
+files.txt
