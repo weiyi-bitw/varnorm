@@ -3,7 +3,7 @@ variant normalization toolkit
 
 Normalize variants in VCF file using left-aligned normalization. Basically a wrapper around Counsyl's hgvs package.
 
-Prerequiesite
+Prerequisite
 -------------
 
 Setup $HG19 environment variable.
@@ -32,7 +32,7 @@ optional arguments:
                         Output file. Default: stdout
   --reference REF_GENOME
                         Path to reference genome .fa file. Default: $HG19
-                        environmental variable.
+                        environment variable.
   -v, --verbose         Run in verbose mode.
   --novkey              Do not generate vkey.
   -s, --sample          Keep sample information.
