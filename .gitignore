@@ -3,4 +3,5 @@ MANIFEST
 env/
 dist/
 build/
+data/
 files.txt

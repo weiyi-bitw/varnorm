@@ -7,7 +7,7 @@ setup(
     author_email='wei-yi.cheng@mssm.edu',
     packages=['varnorm', 'varnorm.test'],
     include_package_data = True,
-    scripts=['bin/normVCF', 'bin/reinstallPkg'],
+    scripts=['bin/normVCF', 'bin/reinstallPkg', 'bin/elementizeCGFormat'],
     url='http://hidysabc.com/blog',
     license='LICENSE.txt',
     description='Variant normalization tool kit',
