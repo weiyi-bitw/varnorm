@@ -78,7 +78,7 @@ class VarCharKey(object):
             print >> self.log, self.infoHeader + message
     
     @staticmethod
-    def v2k(chrom, start, end, alt, refgenome=37):
+    def v2k(chrom, start, end, alt=None, refgenome=37):
         #########
         #
         # Key's bit array (all length in byte)
@@ -100,17 +100,16 @@ class VarCharKey(object):
 
         endChar = int2VarChar(end, 5)
         
-        altChar = seq2VarChar(alt)
+        altChar = ''
         
-        if altChar == None:
-            return None
-
-        altLength = len(altChar)
-        keyLength = 13 + altLength
-        # check for maximum key length
-        if keyLength > 1000:
-            print >> sys.stderr,  "Warning: " + repr([chrom, start, end, ref, alt]) 
-            print >> sys.stderr, "`alt` length exceeding maximum length! The generated key will not be able to be indexed as a whole through MySQL." 
+        if alt != None:
+            altChar = seq2VarChar(alt)
+            altLength = len(altChar)
+            keyLength = 13 + altLength
+            # check for maximum key length
+            if keyLength > 1000:
+                print >> sys.stderr,  "Warning: " + repr([chrom, start, end, ref, alt]) 
+                print >> sys.stderr, "`alt` length exceeding maximum length! The generated key will not be able to be indexed as a whole through MySQL." 
 
         return unicode(rgChar + chromChar + startChar + endChar + altChar)
 
@@ -118,7 +117,7 @@ class VarCharKey(object):
     def k2v(k):
         chrom = k[1]
         if VarCharKey.genome == None:
-            raise NoGenomeFileError("The reference genome file is not assigned!\n\nSet `HG19` environment variable to the .fa file.")
+            print >> sys.stderr, "Warning: `HG19` environment variable is not set, cannot obtain reference sequence."
         chrom = str(codeMap.index(k[1]))
         if chrom in invChromMap:
             chrom = invChromMap[chrom]
@@ -127,7 +126,9 @@ class VarCharKey(object):
         k = k[5:]
         end = varChar2Int(k[:5])
         k = k[5:]
-        ref = str(VarCharKey.genome['chr'+chrom][(start-1):end]).upper()
+        ref = None
+        if VarCharKey.genome != None:
+            ref = str(VarCharKey.genome['chr'+chrom][(start-1):end]).upper()
         alt = varChar2Seq(k)
         return (chrom, start, end, ref, alt)
 
