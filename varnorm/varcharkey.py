@@ -104,6 +104,8 @@ class VarCharKey(object):
         
         if alt != None:
             altChar = seq2VarChar(alt)
+            if altChar == None:
+                return None
             altLength = len(altChar)
             keyLength = 13 + altLength
             # check for maximum key length

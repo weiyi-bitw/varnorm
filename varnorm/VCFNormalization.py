@@ -39,6 +39,19 @@ class VCFNormalization(object):
         end_norm = start_norm + len(ref_norm) - 1
         return chrom, start_norm, end_norm, ref_norm, alt_norm
 
+    def normAVkey(self, vkey):
+        if VarCharKey.genome == None:
+            print >> sys.stderr, "ERROR: `HG19` environment variable is not set, cannot normalize variant."
+            raise
+        (chrom, start, end, ref, alt) = VarCharKey.k2v(vkey)
+        if ref == alt:
+            return None
+        if len(ref) > 1 or len(alt) > 1:
+            chrom, start, end, ref, alt = self.normAVar(chrom, start, end, ref, alt)
+            return VarCharKey.v2k(chrom, start, end, alt)
+        return vkey
+
+
     def parse_line_nosample(self, line):
         if line.startswith('#'):
             return [line.strip()]

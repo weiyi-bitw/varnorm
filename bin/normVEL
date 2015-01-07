@@ -5,24 +5,43 @@ import os
 import argparse
 from varnorm.VCFNormalization import VCFNormalization
 
-def normalize_vcf(args):
+def normalize_vel(vkey):
     qq = VCFNormalization(
-                inFile = args.inFile,
+                inFile = None,
                 genome = args.reference,
-                vkey=(not args.novkey),
+                vkey=False,
                 verbose=args.verbose
             )
+    fi = gzip.open(args.inFile, 'rb') if args.inFile.endswith('gz') else open(args.inFile, 'rb')
     fo = open(args.output, 'wb') if type(args.output)==str else sys.stdout
-    qq.run(fo, args.sample)
+    
+    vkeyMap = {}
+    for l in fi:
+        tokens = l.strip().split('\t')
+        vk = tokens[0]
+        if vk == 'None':
+            continue
+        if vk in vkeyMap:
+            tokens[0] = vkeyMap[vk]
+        else:
+            tokens[0] = qq.normAVkey(vk)
+            vkeyMap[vk] = tokens[0]
+        if tokens[0] == None:
+            continue
+
+        print >> fo, '\t'.join(tokens)
+        if len(vkeyMap) >= 1000000:
+            vkeyMap.clear()
+
     if fo != sys.stdout:
         fo.close()
-       
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser (description = __doc__, \
             formatter_class = argparse.RawDescriptionHelpFormatter)
     parser.add_argument('inFile', metavar='INPUT_FILE', \
-            help="Input vcf file for normalization.")
+            help="Input file in vel format.")
     parser.add_argument('-o', '--output', metavar='OUTPUT_FILE', \
             default=sys.stdout, \
             help='Output file. Default: stdout')
@@ -33,14 +52,5 @@ if __name__ == '__main__':
             action='store_true', \
             default=False, \
             help='Run in verbose mode.')
-    parser.add_argument('--novkey', \
-            action='store_true', \
-            default=False, \
-            help='Do not generate vkey.')
-    parser.add_argument('-s', '--sample', \
-            action='store_true', \
-            default=False, \
-            help='Keep sample information.')
     args = parser.parse_args()
-    sys.exit(normalize_vcf(args))
-
+    sys.exit(normalize_vel(args))
