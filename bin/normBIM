@@ -5,18 +5,29 @@ import os
 import argparse
 from varnorm.VCFNormalization import VCFNormalization
 
-def normalize_vcf(args):
+def normalize_bim(args):
     qq = VCFNormalization(
-                inFile = args.inFile,
+                inFile = None,
                 genome = args.reference,
-                vkey=(not args.novkey),
+                vkey=False,
                 verbose=args.verbose
             )
-    fo = open(args.output, 'wb') if type(args.output) is str else sys.stdout
-    qq.run(fo, args.sample)
-    if fo != sys.stdout:
-        fo.close()
-       
+    
+    fo = open(args.output, 'wb') if type(args.output) is str \
+            else sys.stdout
+    with open(args.inFile, 'rb') as fi:
+        for l in fi:
+            [chrom, vid, garbage, pos, ref, alt] = l.strip().split(' ')
+            chrom = 'X' if chrom == '23' else chrom
+            start = int(pos)
+            end = start + len(ref) - 1
+            [chrom, start_norm, end_norm, ref_norm, alt_norm] = \
+                qq.normAVar(chrom, start, end, ref, alt)
+            print >> fo, '\t'.join([vid, chrom, str(start_norm), \
+                str(end_norm), ref_norm, alt_norm])
+    fo.close()
+    
+      
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser (description = __doc__, \
@@ -42,5 +53,5 @@ if __name__ == '__main__':
             default=False, \
             help='Keep sample information.')
     args = parser.parse_args()
-    sys.exit(normalize_vcf(args))
+    sys.exit(normalize_bim(args))
 

@@ -20,6 +20,8 @@ class VCFNormalization(object):
             print >> self.log, self.infoHeader + message
 
     def normAVar(self, chrom, start, end, ref, alt):
+        if len(ref) == 1 and len(alt) == 1:
+            return chrom, start, end, ref, alt
         if not ref:
             ref = str(self.genome['chr'+chrom][(start-1):end]).upper()
         if ref == '.' or ref == '-':
