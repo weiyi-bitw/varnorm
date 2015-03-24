@@ -17,10 +17,12 @@ def normalize_bim(args):
             else sys.stdout
     with open(args.inFile, 'rb') as fi:
         for l in fi:
-            [chrom, vid, garbage, pos, ref, alt] = l.strip().split(' ')
+            [chrom, vid, garbage, pos, alt, ref] = l.strip().split(' ')
             chrom = 'X' if chrom == '23' else chrom
             start = int(pos)
             end = start + len(ref) - 1
+            #end = int(pos)
+            #start = end - len(ref) + 1
             [chrom, start_norm, end_norm, ref_norm, alt_norm] = \
                 qq.normAVar(chrom, start, end, ref, alt)
             print >> fo, '\t'.join([vid, chrom, str(start_norm), \
