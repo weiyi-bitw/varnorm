@@ -24,7 +24,7 @@ usage: normVCF [-h] [-o OUTPUT_FILE] [--reference REF_GENOME] [-v] [--novkey]
                INPUT_FILE
 
 positional arguments:
-  INPUT_FILE            Input text file to load into database.
+  INPUT_FILE            Input vcf file for normalization.
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -32,7 +32,7 @@ optional arguments:
                         Output file. Default: stdout
   --reference REF_GENOME
                         Path to reference genome .fa file. Default: $HG19
-                        environment variable.
+                        environmental variable.
   -v, --verbose         Run in verbose mode.
   --novkey              Do not generate vkey.
   -s, --sample          Keep sample information.

@@ -12,6 +12,12 @@ def normalize_vcf(args):
                 vkey=(not args.novkey),
                 verbose=args.verbose
             )
+    if type(args.output) is str:
+        out_file_token = args.output.split("/")
+        dirs_to_create = '/'.join(out_file_token[:(len(out_file_token)-1)])
+        if dirs_to_create and not os.path.exists(dirs_to_create):
+          os.makedirs(dirs_to_create)
+
     fo = open(args.output, 'wb') if type(args.output) is str else sys.stdout
     qq.run(fo, args.sample)
     if fo != sys.stdout:

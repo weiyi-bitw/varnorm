@@ -24,12 +24,16 @@ def normalize_vel(vkey):
         if vk in vkeyMap:
             tokens[0] = vkeyMap[vk]
         else:
-            tokens[0] = qq.normAVkey(vk)
-            vkeyMap[vk] = tokens[0]
+            try:
+              tokens[0] = qq.normAVkey(vk)
+              vkeyMap[vk] = tokens[0]
+            except:
+              print vk
+              raise
         if tokens[0] == None:
             continue
 
-        print >> fo, '\t'.join(tokens)
+        print >> fo, '\t'.join([x.decode('utf-8').encode('ascii', 'ignore') for x in tokens])
         if len(vkeyMap) >= 1000000:
             vkeyMap.clear()
 

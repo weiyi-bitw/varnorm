@@ -116,8 +116,10 @@ class VCFNormalization(object):
         ref = tokens[3]
         alts = tokens[4].split(',')
         nalts = len(alts)
-
+        
         out = []
+        rawfields = tokens[8].split(':')
+        fieldmap = dict(zip(rawfields, range(len(rawfields)) ) )
 
         for a in range(nalts):
             alt = alts[a]
@@ -151,6 +153,18 @@ class VCFNormalization(object):
                     tk[7] = info
 
             tk[:5] = [chrom, str(start_norm), varID, ref_norm, alt_norm]
+            if nalts > 1:
+                for j in range(9, len(tk)):
+                    ttkk = tk[j].split(':')
+                    aac = ttkk[fieldmap['GT']].count(str(a+1))
+                    if aac == 0:
+                        ttkk[fieldmap['GT']] = '0/0'
+                    elif aac == 1:
+                        ttkk[fieldmap['GT']] = '0/1'
+                    elif aac == 2:
+                        ttkk[fieldmap['GT']] = '1/1'
+                    tk[j] = ':'.join(ttkk)
+
 
             out.append("\t".join(tk))
 
