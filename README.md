@@ -9,7 +9,10 @@ Prerequisite
 Setup $HG19 environment variable.
 
 python packages:
-- hgvs from [Counsyl](https://github.com/counsyl/hgvs)
+- hgvs from [Counsyl](https://github.com/counsyl/hgvs) by doing
+```
+pip install git+https://github.com/counsyl/hgvs.git
+```
 - pygr
 
 normVCF
